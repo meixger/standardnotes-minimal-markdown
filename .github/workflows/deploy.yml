@@ -1,0 +1,74 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Update ext.json for GitHub Pages
+        run: |
+          cat > ext.json << 'EOF'
+          {
+            "identifier": "com.meixger.sn-minimal-markdown2",
+            "name": "LaTeX Editor",
+            "content_type": "SN|Component",
+            "area": "editor-editor",
+            "spellcheckControl": true,
+            "version": "1.1.0",
+            "description": "Minimal Markdown with clickable links",
+            "url": "https://meixger.github.io/standardnotes-minimal-markdown/",
+            "download_url": "https://meixger.github.io/standardnotes-minimal-markdown/",
+            "latest_url": "https://meixger.github.io/standardnotes-minimal-markdown/ext.json",
+            "marketing_url": "https://meixger.github.io/standardnotes-minimal-markdown/",
+            "thumbnail_url": ""
+          }
+          EOF
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp ext.json _site/
+          cp -r dist _site/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

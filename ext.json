@@ -1,8 +1,14 @@
 {
-    "identifier": "com.meixger.minimal-markdown-2",
-    "name": "Minimal Markdown Editor",
-    "content_type": "SN|Component",
-    "area": "editor-editor",
-    "version": "1.0.0",
-    "url": "http://localhost:8005/"
-  }
+  "identifier": "com.meixger.sn-minimal-markdown2",
+  "name": "Minimal Markdown Editor 2",
+  "content_type": "SN|Component",
+  "area": "editor-editor",
+  "spellcheckControl": true,
+  "version": "2.0.0",
+  "description": "Minimal Markdown with clickable links",
+  "url": "http://localhost:8000/",
+  "download_url": "http://localhost:8000/",
+  "latest_url": "http://localhost:8000/ext.json",
+  "marketing_url": "http://localhost:8000/",
+  "thumbnail_url": ""
+}
