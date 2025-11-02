@@ -99,6 +99,21 @@ document.addEventListener('DOMContentLoaded', function (event) {
       }
       saveNote()
     })
+
+    editor.on("mousedown", function(cm, event) {
+      if (!event.ctrlKey) return;
+      event.preventDefault();
+      const pos = cm.coordsChar({left: event.pageX, top: event.pageY});
+      const token = cm.getTokenAt(pos);
+      const urlRegex = /^(https?:\/\/[^\s]+|www\.[^\s]+)/;
+      if (token.string.match(urlRegex)) {
+          let url = token.string;
+          if (!url.startsWith('https')) {
+              url = 'https://' + url;
+          }
+          window.open(url, '_blank');
+      }
+    });
   }
 
   function getInputStyleForEnvironment() {
